@@ -3,22 +3,25 @@ const express = require("express")
 const app = express();
 
 
-app.get("/user",(req,res)=>{
-    res.send({username:"someUser",pass:"pass key"})
-})
-
-
-app.post("/user",(req,res)=>{
-    res.send("Data added successfully")
-})
-
-app.delete("/user",(req,res)=>{
-    res.send("Data Deleted successfully")
-})
-
-
-app.get("/test",(req,res)=>{
-    res.send("calling for test")
+app.get("/user",(req,res,next)=>{
+    next()
+    // res.send("handle first route function")
+},
+(req,res,next)=>{
+    next()
+    // res.send("handle first route function 2")
+},
+(req,res,next)=>{
+    next()
+    // res.send("handle first route function 3")
+},
+(req,res,next)=>{
+    next()
+    // res.send("handle first route function 4")
+},
+(req,res,next)=>{
+    next()
+    res.send("handle first route function 5")
 })
 
 
