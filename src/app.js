@@ -45,6 +45,18 @@ app.get("/feed",async (req,res)=>{
     }
 })
 
+app.post("/findDataById",async (req,res)=>{
+    const id = req.body.id;
+
+    try{
+       const usersData =  await User.findById(id);
+       res.send(usersData);
+
+    }catch(err){
+        res.status(400).send("Something went wroung")
+    }
+})
+
 
 connectDB().then(()=>{
     console.log("database connect succefuly");
