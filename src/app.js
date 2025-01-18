@@ -32,6 +32,19 @@ app.post("/users",async (req,res)=>{
     }
 })
 
+app.post("/deleteUser",async (req,res)=>{
+    const userId = req.body.userId;
+
+    try{
+       const deletedUser =  await User.findByIdAndDelete(userId);
+       console.log("deleted user--------->",deletedUser)
+       res.send("user Deleted successfyllu");
+
+    }catch(err){
+        res.status(400).send("Something went wroung")
+    }
+})
+
 
 app.get("/feed",async (req,res)=>{
     const email = req.body.emailId;
