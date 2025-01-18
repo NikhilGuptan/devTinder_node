@@ -46,6 +46,24 @@ app.post("/deleteUser",async (req,res)=>{
 })
 
 
+app.post("/updateUser",async (req,res)=>{
+    const userId = req.body._id;
+    const body = req.body;
+    try{
+       const updatedUser =  await User.findByIdAndUpdate(userId,body);
+       if(updatedUser){
+        res.send("user Updated successfyllu");
+       }else{
+        res.status(401).send("User not found");
+       }
+    }catch(err){
+        res.status(400).send("Something went wroung")
+    }
+})
+
+
+
+
 app.get("/feed",async (req,res)=>{
     const email = req.body.emailId;
 
