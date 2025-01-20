@@ -31,6 +31,9 @@ const UserSchema = mongoose.Schema(
         message: (props) => `${props.value} is not a valid gender!`,
       },
     },
+  },
+  {
+    timestamps: true,
   }
 );
 
