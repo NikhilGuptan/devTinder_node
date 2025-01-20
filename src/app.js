@@ -11,11 +11,11 @@ app.post("/signup",async (req,res)=>{
     const data = req.body;
     const user = new User(data);
     try{
-        await user.save();
+        const response = await user.save();
         res.send("user added succsfully")
     }
     catch(err){
-        res.status(400).send("Some error while saving user")
+        res.status(400).send("Some error while saving user"+err.message)
     }
 })
 

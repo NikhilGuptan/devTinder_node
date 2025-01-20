@@ -1,24 +1,39 @@
-const mongoose =  require("mongoose");
+const mongoose = require("mongoose");
 
+const UserSchema = mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+    },
+    emailId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    age: {
+      type: Number,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female", "others"],
+      validate: {
+        validator: function (v) {
+          return ["male", "female", "others"].includes(v.toLowerCase());
+        },
+        message: (props) => `${props.value} is not a valid gender!`,
+      },
+    },
+  }
+);
 
-const UserShema = mongoose.Schema({
-    firstName:{
-        type:String
-    },
-    lastName:{
-        type:String
-    },
-    emailId:{
-        type:String
-    },
-    password:{
-        type:String
-    },
-    age:{
-        type:Number
-    }
-})
-
-const User = mongoose.model("User",UserShema);
+const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
