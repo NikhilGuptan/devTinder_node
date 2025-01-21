@@ -12,15 +12,15 @@ const User = require("./models/user");
 app.post("/signup", async (req, res) => {
   try {
     signUpbodyValidation(req);
-    const {password} = req.body;
-    const passwordHash  = await bcrypt.hash(password, 10);
-    console.log("passwordHash----->",passwordHash);
+    const { password } = req.body;
+    const passwordHash = await bcrypt.hash(password, 10);
+    console.log("passwordHash----->", passwordHash);
     const data = req.body;
     const user = new User({
-        firstName:data.firstName,
-        lastName:data.lastName,
-        emailId:data.emailId,
-        password:passwordHash
+      firstName: data.firstName,
+      lastName: data.lastName,
+      emailId: data.emailId,
+      password: passwordHash,
     });
     const skills = (data.skills || [])?.length;
     if (skills > 10) {
@@ -28,6 +28,29 @@ app.post("/signup", async (req, res) => {
     }
     const response = await user.save();
     res.send("user added succsfully");
+  } catch (err) {
+    res.status(400).send("Some error while saving user" + err.message);
+  }
+});
+
+app.post("/login", async (req, res) => {
+  console.log("called is here-----------");
+  try {
+    const { emailId, password } = req.body;
+
+    const user = await User.findOne({ emailId: emailId });
+    console.log("user----->", user);
+    if (!user) {
+      res.status(400).send("Invalid Credincial");
+    } else {
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      console.log("isValidPassword--------->", isValidPassword);
+      if (!isValidPassword) {
+        res.status(400).send("Invalid Credincial");
+      } else {
+        res.send("login succefully");
+      }
+    }
   } catch (err) {
     res.status(400).send("Some error while saving user" + err.message);
   }
