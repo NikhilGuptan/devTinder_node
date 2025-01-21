@@ -21,6 +21,9 @@ const UserSchema = mongoose.Schema(
     age: {
       type: Number,
     },
+    skills: {
+      type: [String],
+    },
     gender: {
       type: String,
       enum: ["male", "female", "others"],
