@@ -2,8 +2,9 @@ const express = require("express");
 const { connectDB } = require("./config/database");
 const { signUpbodyValidation } = require("./utils/validation");
 const bcrypt = require("bcrypt");
-var cookieParser = require('cookie-parser')
-var jwt = require('jsonwebtoken');  
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken'); 
+const  {userAuth} = require("./middleWare/auth");
 
 const app = express();
 
@@ -54,7 +55,7 @@ app.post("/login", async (req, res) => {
       return res.status(400).send("Invalid Credential");
     }
     const token = jwt.sign(
-      { id: user._id },"mydev@tinder");
+      { id: user._id },"mydev@tinder",{ expiresIn: "7d" });
     res.cookie("token", token);
 
     res.send("Login successfully");
@@ -63,36 +64,10 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth ,async (req, res) => {
   try {
-    const cookies = req.cookies;
 
-    // Check if token exists in cookies
-    if (!cookies || !cookies.token) {
-      return res.status(401).send("Unauthorized: No token provided");
-    }
-
-    const { token } = cookies;
-    console.log("token----.",token)
-
-    // Verify the token
-    let decoded;
-    try {
-      decoded = jwt.verify(token, "mydev@tinder"); // Replace with your actual secret key
-    } catch (err) {
-      return res.status(401).send("Unauthorized: Invalid token");
-    }
-
-    // Retrieve user ID from the decoded token
-    const userId = decoded.id;
-
-    // Find user in the database
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    // Send user data as a response
+    const user = req.user;
     res.send({
       message: "Profile data retrieved successfully",
       user,
@@ -101,6 +76,16 @@ app.get("/profile", async (req, res) => {
     res.status(500).send("Something went wrong: " + err.message);
   }
 });
+
+app.get("/sendConcetionRequest", userAuth ,async (req, res) => {
+    try {
+  
+      const user = req.user;
+      res.send(`concetion Request send from : ${user.firstName}`);
+    } catch (err) {
+      res.status(500).send("Something went wrong: " + err.message);
+    }
+  });
 
 
 app.post("/users", async (req, res) => {
