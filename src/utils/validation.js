@@ -19,6 +19,15 @@ const signUpbodyValidation = (req) =>{
 }
 
 
+const validateProfileUpdateReq = (req) =>{
+    const validKeys = ["firstName","lastName","skills"];
+
+    const isKeyValid = Object.keys(req.body).every((key)=>validKeys.includes(key));
+
+    return isKeyValid;
+}
+
 module.exports = {
-    signUpbodyValidation
+    signUpbodyValidation,
+    validateProfileUpdateReq
 }
